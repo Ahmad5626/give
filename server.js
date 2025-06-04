@@ -8,7 +8,7 @@ const cors = require('cors');
 //   process.env.CLIENT_URL?.replace(/\/$/, ""),
 //   process.env.ADMIN_URL?.replace(/\/$/, "")
 // ];
-const allowedOrigins =['https://giveummah.com', 'https://admin.giveummah.com']
+const allowedOrigins =['giveummah-nu.vercel.app', 'grade-topperdashboard-z4gy.vercel.app']
 const port = process.env.PORT || 3000;
 app.use(cors({
   origin: function (origin, callback) {
