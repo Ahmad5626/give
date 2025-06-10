@@ -58,7 +58,10 @@ const createCampaign = async (req, res) => {
       spendingPlans ,
       firstName,
       lastName,
-      ranking
+      ranking,
+      supportingDocuments,
+      supportingDocumentsUrl,
+      instituteName
 
     } = req.body;
 
@@ -115,6 +118,9 @@ const createCampaign = async (req, res) => {
       firstName,
       lastName,
       ranking,
+      supportingDocuments,
+      supportingDocumentsUrl,
+      instituteName,
       createdBy: req.user.id
     });
 
