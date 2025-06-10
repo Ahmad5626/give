@@ -6,14 +6,14 @@ const cors = require('cors');
 const { createHash } = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 const axios = require('axios');
-const allowedOrigins = [
-  process.env.CLIENT_URL,
-  process.env.ADMIN_URL
-];
 // const allowedOrigins = [
-//   'https://giveummah-nu.vercel.app',
-//   'https://grade-topperdashboard-z4gy.vercel.app'
+//   process.env.CLIENT_URL,
+//   process.env.ADMIN_URL
 // ];
+const allowedOrigins = [
+  'https://giveummah-nu.vercel.app',
+  'https://grade-topperdashboard-z4gy.vercel.app'
+];
 const port = process.env.PORT || 3000;
 app.use(cors({
   origin: function (origin, callback) {
@@ -129,7 +129,3 @@ app.listen(port, () => {
   
 });
 
-// app.use(cors(corsOptions));
-// 
-// app.use(express.urlencoded({ extended: true }));
-// app.use(express.static('public'));
