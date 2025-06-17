@@ -2,7 +2,9 @@ const mongoose = require("mongoose");
 
 const RecommendedCausesSchema = new mongoose.Schema({
  headline: { type: String },
- url: { type: String },
+ category: { type: String },
+ pageHeadline: { type: String },
+ pageSubHeadline: { type: String },
  
  
 });

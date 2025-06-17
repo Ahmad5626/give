@@ -37,8 +37,12 @@ const campaignSchema = new mongoose.Schema({
  firstName: { type: String },
  goalAmount: { type: Number },
  governmentIdUrl: { type: String },
- supportingDocuments: { type: String },
- supportingDocumentsUrl: { type: String },
+ supportingDocuments: {
+    type: [String],
+  },
+ supportingDocumentsUrl:{
+    type: [String],
+  },
  ifscCode: { type: String },
  isBeneficiaryOrphan: { type: String },
  isUrgent: { type: Boolean },
@@ -64,12 +68,20 @@ const campaignSchema = new mongoose.Schema({
     required: true },
     givenAmount: [
     {
-      _id: mongoose.Schema.Types.ObjectId,
+      _id: String,
       amount: Number,
       headline: String,
       subHeadline: String,
     },
   ],
+  updates: [
+      {
+        _id: String,
+        story: String,
+        videoUrl: String,
+        images: [],
+      },
+    ],
     ranking: { type: Number },
     comments: [
       {
@@ -82,7 +94,8 @@ const campaignSchema = new mongoose.Schema({
     instituteName: { type: String },
     instituteRole: { type: String },
     anticipatedDonations: { type: Number },
-    spendingPlans: { type: String },
+    spendingPlans: { type: String }
+    
 }, { timestamps: true });
 
 module.exports = mongoose.model('Campaign', campaignSchema);

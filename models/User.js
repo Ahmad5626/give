@@ -20,6 +20,8 @@ const UserSchema = new mongoose.Schema({
   Country:String,
   websiteUrl:String,
   profileImage:String,
+  RegisteredType: String,
+  profileImage: String,
   
 });
 

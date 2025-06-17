@@ -1,5 +1,5 @@
 const User = require("../../models/User");
-// const { OAuth2Client } = require("google-auth-library");
+const { OAuth2Client } = require("google-auth-library");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const registerUser = async (req, res) => {
@@ -9,10 +9,10 @@ const registerUser = async (req, res) => {
       return res.status(400).send("All fields are required");
     }
     const userExists = await User.findOne({
-      $or: [{ userEmail }, { fullName }],
+      $or: [{ userEmail }],
     });
     if (userExists) {
-      return res.status(400).send("User already exists");
+      return res.status(400).send("Email already exists");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -57,11 +57,7 @@ const loginUser = async (req, res) => {
         userEmail: user.userEmail,
         role: user.role,
         RegisteredType: user.RegisteredType,
-        // Address: user.Address,
-        // instituteName: user.instituteName,
-        // instituteBio: user.instituteBio,
-        // instituteCategory: user.instituteCategory,
-        // profileImage: user.profileImage
+        
        
       },
       process.env.JWT_SECRET,
@@ -209,38 +205,117 @@ const deleteUser=async(req,res)=>{
   }
 }
 
-// const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-// const googleLogin = async (req, res) => {
-//   const { credential } = req.body;
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
 
-//   try {
-//     const ticket = await client.verifyIdToken({
-//       idToken: credential,
-//       audience: process.env.GOOGLE_CLIENT_ID,
-//     });
+const client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET);
+const googleLogin = async (req, res) => {
+  const token = req.body.token || req.body.credential; // ✅ fallback
+  if (!token) {
+    return res.status(400).json({ message: "Token is required" });
+  }
 
-//     const payload = ticket.getPayload();
-//     const { email, name, picture, sub } = payload;
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: CLIENT_ID,
+    });
 
-//     // You can create or find user in DB here
-//     const user = {
-//       id: sub,
-//       email,
-//       name,
-//       picture,
-//     };
+   const payload = ticket.getPayload();
+    const { email, name, picture } = payload;
 
-//     // Create JWT token
-//     const  token = jwt.sign(user, process.env.JWT_SECRET, {
-//       expiresIn: "7d",
-//     });
+    // ✅ Check if user already exists
+    let user = await User.findOne({ userEmail: email });
 
-//     res.json({ token, user });
-//   } catch (err) {
-//     console.error("Google login error:", err);
-//     res.status(400).json({ message: "Google login failed" });
-//   }
-// };
-module.exports = { registerUser, loginUser,updateUser,getUsers,deleteUser,chekcAuthData };
+    if (!user) {
+      //  Not found → Create with minimum details
+      user = await User.create({
+        fullName: name,
+        userEmail: email,
+        password: null, // Google user doesn't need password
+        RegisteredType: "google",
+        profileImage: picture,
+      });
+    }
+     // ✅ Generate JWT
+    const jwtToken = jwt.sign(
+  {
+    id: user._id,
+    fullName: user.fullName,
+    userEmail: user.userEmail,
+    role: user.role,
+    RegisteredType: user.RegisteredType,
+  },
+  process.env.JWT_SECRET,
+  { expiresIn: "2000m" }
+);
+
+    res.status(200).json({
+      message: "Login successful",
+        token: jwtToken,
+      user: {
+        id: user._id,
+        fullName: user.fullName,
+        userEmail: user.userEmail,
+        profileImage: user.profileImage,
+        RegisteredType: user.RegisteredType,
+      },
+    });
+    res.status(200).json({ message: 'Login successful', user: payload });
+  } catch (err) {
+    res.status(401).json({ message: 'Invalid token', error: err.message });
+  }
+};
+
+const facebookLogin = async (req, res) => {
+  const { accessToken } = req.body;
+
+  try {
+    // Step 1: Verify token + get user info from Facebook
+    const fbRes = await axios.get(
+      `https://graph.facebook.com/me?fields=id,name,email,picture&access_token=${accessToken}`
+    );
+
+    const { email, name, picture } = fbRes.data;
+
+    let user = await User.findOne({ userEmail: email });
+
+    if (!user) {
+      user = await User.create({
+        fullName: name,
+        userEmail: email,
+        RegisteredType: "facebook",
+        profileImage: picture?.data?.url || "",
+      });
+    }
+
+    const jwtToken2 = jwt.sign(
+  {
+    id: user._id,
+    fullName: user.fullName,
+    userEmail: user.userEmail,
+    role: user.role,
+    RegisteredType: user.RegisteredType,
+  },
+  process.env.JWT_SECRET,
+  { expiresIn: "2000m" }
+);
+
+    res.status(200).json({
+      message: "Login successful",
+        token: jwtToken2,
+      user: {
+        id: user._id,
+        fullName: user.fullName,
+        userEmail: user.userEmail,
+        profileImage: user.profileImage,
+        RegisteredType: user.RegisteredType,
+      },
+    });
+  } catch (err) {
+    res.status(401).json({ message: "Facebook login failed", error: err.message });
+  }
+};
+module.exports = { registerUser, loginUser,updateUser,getUsers,deleteUser,chekcAuthData ,googleLogin,facebookLogin};
 
 

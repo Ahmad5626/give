@@ -3,12 +3,17 @@ const RecommendedCauses = require('../../models/RecommendedCauses');
 const createRecommendedCauses = async (req, res) => {
     const {
         headline,
-        url
+        category,
+        pageHeadline,
+        pageSubHeadline
+
     } = req.body;
     try {
         const recommendedCauses = new RecommendedCauses({
             headline,
-            url
+            category,
+            pageHeadline,
+            pageSubHeadline
         });
         await recommendedCauses.save();
         res.status(201).json({
