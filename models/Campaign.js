@@ -37,6 +37,7 @@ const campaignSchema = new mongoose.Schema({
  firstName: { type: String },
  goalAmount: { type: Number },
  governmentIdUrl: { type: String },
+ 
  supportingDocuments: {
     type: [String],
   },

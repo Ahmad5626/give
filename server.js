@@ -42,6 +42,7 @@ const campaignRoute = require('./routes/campaign');
 const buttonsRoute = require('./routes/buttons');
 const inspiringInstitutesRoute = require('./routes/inspiringInstitutes');
 const recommendedCausesRoute = require('./routes/recommendedCauses');
+const fundRequestRoute = require('./routes/fundRequest');
 connectDB();
 
 // Serve static images
@@ -56,6 +57,7 @@ app.use("/v1/api", campaignRoute);
 app.use("/v1/api/buttons", buttonsRoute);
 app.use("/v1/api/inspiringInstitutes", inspiringInstitutesRoute);
 app.use("/v1/api/recommendedCauses", recommendedCausesRoute);
+app.use("/v1/api/fundRequest", fundRequestRoute);
 
 
 const {
