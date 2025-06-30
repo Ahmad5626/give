@@ -5,6 +5,8 @@ const RecommendedCausesSchema = new mongoose.Schema({
  category: { type: String },
  pageHeadline: { type: String },
  pageSubHeadline: { type: String },
+ pageCta: { type: String },
+ pageImage: { type: String },
  
  
 });

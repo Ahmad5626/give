@@ -16,6 +16,7 @@ const allowedOrigins = [
 ];
 const port = process.env.PORT || 3000;
 app.use(cors({
+
   origin: function (origin, callback) {
     console.log("Origin:", origin);
     if (!origin || allowedOrigins.includes(origin)) {
@@ -43,6 +44,7 @@ const buttonsRoute = require('./routes/buttons');
 const inspiringInstitutesRoute = require('./routes/inspiringInstitutes');
 const recommendedCausesRoute = require('./routes/recommendedCauses');
 const fundRequestRoute = require('./routes/fundRequest');
+const heartRoute = require('./routes/heartRoutes');
 connectDB();
 
 // Serve static images
@@ -58,6 +60,8 @@ app.use("/v1/api/buttons", buttonsRoute);
 app.use("/v1/api/inspiringInstitutes", inspiringInstitutesRoute);
 app.use("/v1/api/recommendedCauses", recommendedCausesRoute);
 app.use("/v1/api/fundRequest", fundRequestRoute);
+app.use("/api/hearts",heartRoute)
+
 
 
 const {

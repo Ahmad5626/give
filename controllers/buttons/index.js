@@ -4,13 +4,15 @@ const CreateAllbuttons = async (req, res) => {
     const {
         heroSectionButton,
         honorTheirButton,
-        fundraiseWithFaithButton
+        fundraiseWithFaithButton,
+        discoveryButton
       } = req.body;
         try {
             const allbuttons =  new Allbuttons({
                 heroSectionButton,
                 honorTheirButton,
-                fundraiseWithFaithButton
+                fundraiseWithFaithButton,
+                discoveryButton
             });
             await allbuttons.save();
             res.status(200).json({
@@ -35,12 +37,13 @@ const CreateAllbuttons = async (req, res) => {
 }
 const updatebutton =async(req,res)=>{
 const id="6836a3679fe119b98ac0e436"
-const {heroSectionButton,honorTheirButton,fundraiseWithFaithButton}=req.body
+const {heroSectionButton,honorTheirButton,fundraiseWithFaithButton,discoveryButton}=req.body
 try {
     const allbuttons = await Allbuttons.findOneAndUpdate({_id:id},{
         heroSectionButton,
         honorTheirButton,
-        fundraiseWithFaithButton
+        fundraiseWithFaithButton,
+        discoveryButton
     },{new:true});
     res.status(200).json({success: true, message: 'Allbuttons updated successfully', data: allbuttons});
     return allbuttons;

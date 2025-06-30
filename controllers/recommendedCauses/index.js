@@ -5,7 +5,9 @@ const createRecommendedCauses = async (req, res) => {
         headline,
         category,
         pageHeadline,
-        pageSubHeadline
+        pageSubHeadline,
+        pageCta,
+        pageImage
 
     } = req.body;
     try {
@@ -13,7 +15,9 @@ const createRecommendedCauses = async (req, res) => {
             headline,
             category,
             pageHeadline,
-            pageSubHeadline
+            pageSubHeadline,
+            pageCta,
+            pageImage
         });
         await recommendedCauses.save();
         res.status(201).json({
